@@ -1,38 +1,203 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Productos - Tienda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-outline {
+            background-color: #ffffff;
+            color: #2563eb;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background-color: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .card-table {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            padding: 14px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-active {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-inactive {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+
+        .empty-msg {
+            padding: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 15px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Listado de Productos</h1>
 
-    <a href="{% url 'registrar_producto' %}">Registrar producto</a>
-    <br><br>
+    <div class="wrapper">
+        <div class="top-bar">
+            <h1>Gestión de Productos</h1>
+            <div class="button-group">
+                <a href="{% url 'registrar_producto' %}" class="btn btn-primary">+ Agregar Producto</a>
+                <a href="{% url 'listar_categorias' %}" class="btn btn-outline">Categorías</a>
+            </div>
+        </div>
 
-    {% if productos %}
-        <table border="1" cellpadding="8">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in productos %}
+        <div class="card-table">
+            {% if productos %}
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ p.nombre }}</td>
-                        <td>{{ p.categoria }}</td>
+                        <th>Producto</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                    <tr>
+                        <td><strong style="color: #0f172a;">{{ p.nombre }}</strong></td>
+                        <td>{{ p.categoria.nombre }}</td>
                         <td>${{ p.precio }}</td>
                         <td>{{ p.cantidad }}</td>
+                        <td>
+                            {% if p.estado %}
+                            <span class="tag tag-active">Activo</span>
+                            {% else %}
+                            <span class="tag tag-inactive">Inactivo</span>
+                            {% endif %}
+                        </td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Todavía no hay productos registrados.</p>
-    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-msg">
+                <p>No existen productos registrados actualmente.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
 </body>
+
 </html>
