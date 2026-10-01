@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Producto</title>
+    <title>{% if producto %}Editar Producto{% else %}Registrar Producto{% endif %}</title>
     <style>
         * {
             box-sizing: border-box;
@@ -151,8 +151,8 @@
 
     <div class="card">
         <div class="card-header">
-            <h1>Registrar Producto</h1>
-            <p>Ingresa los datos para agregar un nuevo ítem</p>
+            <h1>{% if producto %}Editar Producto{% else %}Registrar Producto{% endif %}</h1>
+            <p>{% if producto %}Modifica los datos del producto existente{% else %}Ingresa los datos para agregar un nuevo ítem{% endif %}</p>
         </div>
 
         <form method="POST">
@@ -160,15 +160,17 @@
 
             <div class="form-group">
                 <label for="nombre">Nombre del producto</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Ej. Teclado Mecánico" required>
+                <input type="text" id="nombre" name="nombre" value="{{ producto.nombre|default:'' }}" placeholder="Ej. Teclado Mecánico" required>
             </div>
 
             <div class="form-group">
                 <label for="categoria">Categoría</label>
                 <select id="categoria" name="categoria" required>
-                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="" disabled {% if not producto %}selected{% endif %}>Selecciona una opción</option>
                     {% for cat in categorias %}
-                    <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                    <option value="{{ cat.id }}" {% if producto.categoria.id == cat.id %}selected{% endif %}>
+                        {{ cat.nombre }}
+                    </option>
                     {% endfor %}
                 </select>
             </div>
@@ -176,20 +178,22 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="precio">Precio ($)</label>
-                    <input type="number" step="0.01" id="precio" name="precio" placeholder="0.00" required>
+                    <input type="number" step="0.01" id="precio" name="precio" value="{{ producto.precio|default:'' }}" placeholder="0.00" required>
                 </div>
                 <div class="form-group">
                     <label for="cantidad">Cantidad</label>
-                    <input type="number" id="cantidad" name="cantidad" placeholder="0" required>
+                    <input type="number" id="cantidad" name="cantidad" value="{{ producto.cantidad|default:'' }}" placeholder="0" required>
                 </div>
             </div>
 
             <div class="checkbox-group">
-                <input type="checkbox" id="estado" name="estado" checked>
+                <input type="checkbox" id="estado" name="estado" {% if producto.estado or not producto %}checked{% endif %}>
                 <label for="estado">Producto disponible / activo</label>
             </div>
 
-            <button type="submit" class="btn-submit">Guardar Producto</button>
+            <button type="submit" class="btn-submit">
+                {% if producto %}Guardar Cambios{% else %}Guardar Producto{% endif %}
+            </button>
         </form>
 
         <a href="{% url 'listar_productos' %}" class="back-link">← Volver al listado</a>

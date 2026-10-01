@@ -140,6 +140,43 @@
             color: #64748b;
         }
 
+        /* Estilos para los botones de acciones */
+        .actions-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-edit {
+            background-color: #f1f5f9;
+            color: #2563eb;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-edit:hover {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .btn-delete {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-delete:hover {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
         .empty-msg {
             padding: 40px;
             text-align: center;
@@ -170,6 +207,7 @@
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -185,6 +223,12 @@
                             {% else %}
                             <span class="tag tag-inactive">Inactivo</span>
                             {% endif %}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="actions-group" style="justify-content: flex-end;">
+                                <a href="{% url 'editar_producto' p.id %}" class="btn-action btn-edit">Editar</a>
+                                <a href="{% url 'eliminar_producto' p.id %}" class="btn-action btn-delete" onclick="return confirm('¿Seguro que deseas eliminar este producto?');">Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
